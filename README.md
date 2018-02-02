@@ -1,6 +1,6 @@
-# OpenGL10
+# OpenGL
 
-This extension is still in progress, it will be so great if you can join and help!
+This extension (group) is still in progress, it will be so great if you can join and help!
 
 Recommend settings:
 
