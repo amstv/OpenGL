@@ -164,7 +164,7 @@ implements Component {
     }
     
     @SimpleFunction(description = "Enable a client-side capability.\n"+
-        "Accepted Constant: GL_VERTEX_ARRAY, GL_NORMAL_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY")
+            "Accepted Constant: GL_VERTEX_ARRAY, GL_NORMAL_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY")
     public void glEnableClientState(int array) {
         if (glRender == null) {
             log.log("glEnableClientState on a null GL10 object");
@@ -174,7 +174,7 @@ implements Component {
     }
 
     @SimpleFunction(description = "Disable a client-side capability.\n"+
-        "Accepted client state: GL_VERTEX_ARRAY, GL_NORMAL_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY")
+            "Accepted client state: GL_VERTEX_ARRAY, GL_NORMAL_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY")
     public void glDisableClientState(int array) {
         if (glRender == null) {
             log.log("glDisableClientState on a null GL10 object");
@@ -183,13 +183,13 @@ implements Component {
         glRender.glDisableClientState(array);
     }
 
-    private static final String GL_CAPABILITY_LIST=
-        "Accepted capabilities: GL_ALPHA_TEST, GL_BLEND, GL_COLOR_LOGIC_OP, GL_COLOR_MATERIAL, GL_CULL_FACE, "+
-        "GL_DEPTH_TEST, GL_DITHER, GL_FOG, GL_LIGHTING, GL_LINE_SMOOTH, GL_MULTISAMPLE, GL_NORMALIZE, GL_POINT_SMOOTH, "+
-        "GL_POLYGON_OFFSET_FILL, GL_RESCALE_NORMAL, GL_SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_ALPHA_TO_ONE, "+
-        "GL_SAMPLE_COVERAGE, GL_SCISSOR_TEST, GL_STENCIL_TEST, GL_TEXTURE_2D";
+    private static final String GL_CAPABILITY_LIST =
+            "Accepted capabilities: GL_ALPHA_TEST, GL_BLEND, GL_COLOR_LOGIC_OP, GL_COLOR_MATERIAL, GL_CULL_FACE, "+
+            "GL_DEPTH_TEST, GL_DITHER, GL_FOG, GL_LIGHTING, GL_LINE_SMOOTH, GL_MULTISAMPLE, GL_NORMALIZE, GL_POINT_SMOOTH, "+
+            "GL_POLYGON_OFFSET_FILL, GL_RESCALE_NORMAL, GL_SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_ALPHA_TO_ONE, "+
+            "GL_SAMPLE_COVERAGE, GL_SCISSOR_TEST, GL_STENCIL_TEST, GL_TEXTURE_2D";
     
-    @SimpleFunction(description = "Disable server-side GL capabilities.\n"+GL_CAPABILITY_LIST)
+    @SimpleFunction(description = "Enable server-side GL capabilities.\n"+GL_CAPABILITY_LIST)
     public void glEnable(int capability) {
         if (glRender == null) {
             log.log("glEnable on a null GL10 object");
@@ -200,7 +200,7 @@ implements Component {
         glRender.glEnable(capability);
     }
 
-    @SimpleFunction(description = "disable server-side GL capabilities"+GL_CAPABILITY_LIST)
+    @SimpleFunction(description = "Disable server-side GL capabilities.\n"+GL_CAPABILITY_LIST)
     public void glDisable(int capability) {
         if (glRender == null) {
             log.log("glDisable on a null GL10 object");
@@ -210,6 +210,62 @@ implements Component {
         // zh - glEnable/glDisable - http://blog.csdn.net/wangyuchun_799/article/details/7821592
         glRender.glDisable(capability);
     }
+
+    @SimpleFunction(description = "Matrices operation: reset")
+    public void glLoadIdentity() {
+        if (glRender==null) {
+            log.log("glLoadIdentity on a null GL10 object");
+            return;
+        }
+        glRender.glLoadIdentity();
+    }
+    @SimpleFunction(description = "Matrices operation: push the current matrix stack")
+    public void glPushMatrix() {
+        if (glRender==null) {
+            log.log("glPushMatrix on a null GL10 object");
+            return;
+        }
+        glRender.glPushMatrix();
+    }
+    @SimpleFunction(description = "Matrices operation: pop the current matrix stack")
+    public void glPopMatrix() {
+        if (glRender==null) {
+            log.log("glPopMatrix on a null GL10 object");
+            return;
+        }
+        glRender.glPopMatrix();
+    }
+    @SimpleFunction(description = "Matrices operation: translate (moving)")
+    public void glTranslate(float x, float y, float z) {
+        if (glRender==null) {
+            log.log("glTranslate on a null GL10 object");
+            return;
+        }
+        glRender.glTranslatef(x, y, z);
+    }
+    @SimpleFunction(description = "Matrices operation: scale")
+    public void glScale(float x, float y, float z) {
+        if (glRender==null) {
+            log.log("glScale on a null GL10 object");
+            return;
+        }
+        glRender.glScalef(x, y, z);
+    }
+    @SimpleFunction(
+        description = "Multiply the current matrix by a rotation matrix. "+
+            "Rotate specific angle on axis that is not 0 (right handed coordinate system).\n"+
+            "E.g. glRotate(angle=45, x=1, y=0 ,z=0) means that rotate anti-clockwise for 45 degree \n"+
+            "THE ANGLE IS IN DRGREE, NOT IN RADIANS")
+    public void glRotate(float angle, float x, float y, float z) {
+        if (glRender==null) {
+            log.log("glRotate on a null GL10 object");
+            return;
+        }
+        // en - glRotate - https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glRotate.xml
+        // zh - glRotate - http://www.cnblogs.com/1024Planet/p/5647224.html
+        glRender.glRotatef(angle, x, y, z);
+    }
+
 
     private class Renderer implements GLSurfaceView.Renderer {
 
