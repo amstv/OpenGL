@@ -1,4 +1,4 @@
-package github.OpenSourceAIX.OpenGL10;
+package github.OpenSourceAIX.OpenGL.GL10;
 
 public final class Log {
 

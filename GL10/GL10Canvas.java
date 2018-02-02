@@ -1,12 +1,12 @@
-package github.OpenSourceAIX.OpenGL10;
+package github.OpenSourceAIX.OpenGL.GL10;
 
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import github.OpenSourceAIX.OpenGL10.util.BufferUtil;
-import github.OpenSourceAIX.OpenGL10.util.Util;
+import github.OpenSourceAIX.OpenGL.GL10.util.BufferUtil;
+import github.OpenSourceAIX.OpenGL.GL10.util.Util;
 
 import java.nio.FloatBuffer;
 
@@ -66,8 +66,8 @@ implements Component {
     /**
      * Methods related
      */
-    private final github.OpenSourceAIX.OpenGL10.Log log = 
-        new github.OpenSourceAIX.OpenGL10.Log();
+    private final github.OpenSourceAIX.OpenGL.GL10.Log log = 
+        new github.OpenSourceAIX.OpenGL.GL10.Log();
     private GL10 glRender = null;
 
 

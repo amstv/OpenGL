@@ -1,4 +1,4 @@
-package github.OpenSourceAIX.OpenGL10.util;
+package github.OpenSourceAIX.OpenGL.GL10.util;
 
 public final class Util {
 
