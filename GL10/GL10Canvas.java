@@ -76,6 +76,7 @@ implements Component {
         super(container.$form());
         this.container = container;
         context = (Context) container.$context();
+
         BackgroundColor(Settings.canvas.DEFAULT_BG_COLOR);
     }
     
@@ -360,7 +361,7 @@ implements Component {
             "- count is the point that want to draw.")
     public void glDrawArrays(int mode, int start, int count) {
         if (glRender == null) {
-            Log("glDrawArrays on a null GL10 object");
+            log.log("glDrawArrays on a null GL10 object");
             return;
         }
         glRender.glDrawArrays(mode, start, count);
@@ -372,7 +373,7 @@ implements Component {
             "- count is the point that want to draw.")
     public void glDrawArraysPoints(int start, int count) {
         if (glRender == null) {
-            Log("glDrawArraysPoints on a null GL10 object");
+            log.log("glDrawArraysPoints on a null GL10 object");
             return;
         }
         this.glDrawArrays(GL10.GL_POINTS, start, count);
@@ -381,7 +382,7 @@ implements Component {
     @SimpleFunction
     public void glPointSize(float size) {
         if (glRender == null) {
-            Log("glPointSize on a null GL10 object");
+            log.log("glPointSize on a null GL10 object");
             return;
         }
         glRender.glPointSize(size);
