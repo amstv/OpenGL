@@ -1,5 +1,9 @@
 package github.OpenSourceAIX.OpenGL10;
 
+import javax.microedition.khronos.opengles.GL10;
+
+import com.google.appinventor.components.runtime.Component;
+
 public class Settings {
 
     private Settings() {
@@ -18,6 +22,13 @@ public class Settings {
         public static final String ICON = "aiwebres/icon/GL10Canvas.png";
         
         public static final boolean DEFAULT_AS_CONTENT_VIEW = false;
+    
+        public static final int DEFAULT_BG_COLOR = Component.COLOR_WHITE;
+    
+        public static final int DEFAULT_SHADE_MODEL = GL10.GL_SMOOTH;
+        
+        public static final boolean DEFAULT_DEPTH_TEST_ENABLED = true;
+        public static final int DEFAULT_DEPTH_FUNC = GL10.GL_LEQUAL;
         
         public static final boolean DEFAULT_RENDER_CONTINUOUSLY = true;
 

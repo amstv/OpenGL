@@ -5,6 +5,8 @@ import android.opengl.GLU;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import github.OpenSourceAIX.OpenGL10.util.Util;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -45,7 +47,16 @@ implements Component {
      * Properties related
      */
     private boolean asContentView;
+    
     private boolean glRenderContinuously;
+
+    private int bgColor = Settings.canvas.DEFAULT_BG_COLOR;
+    private float[] bgColorF = new float[4];
+
+    private int glShadeModel = Settings.canvas.DEFAULT_SHADE_MODEL;
+    
+    private boolean glDepthTestEnabled = Settings.canvas.DEFAULT_DEPTH_TEST_ENABLED;
+    private int glDepthFunc = Settings.canvas.DEFAULT_DEPTH_FUNC;
     
     /**
      * Methods related
@@ -60,7 +71,9 @@ implements Component {
         super(container.$form());
         this.container = container;
         context = (Context) container.$context();
+        BackgroundColor(Settings.canvas.DEFAULT_BG_COLOR);
     }
+    
 
     @SimpleFunction(
         description = "Don't need to call this if property ScreenContentView is checked")
@@ -130,6 +143,45 @@ implements Component {
     public boolean glRenderContinuously() {
         return glRenderContinuously;
     }
+
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COLOR,
+        defaultValue = ""+Settings.canvas.DEFAULT_BG_COLOR)
+    @SimpleProperty
+    public void BackgroundColor(int color) {
+        bgColor = color;
+        // write into buffer
+        Util.colorI2F(color, bgColorF);
+    }
+    @SimpleProperty
+    public int BackgroundColor() {
+        return bgColor;
+    }
+
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+        defaultValue = Settings.canvas.DEFAULT_SHADE_MODEL==GL10.GL_SMOOTH ? "True" : "False")
+    @SimpleProperty(userVisible = false)
+    public void glShadeModelSmooth(boolean smooth) {
+        // zh - http://blog.csdn.net/chenqiai0/article/details/8316258
+        this.glShadeModel = smooth ? GL10.GL_SMOOTH : GL10.GL_FLAT;
+    }
+
+    // avoid name this "glEnabledDepthTest" in order to keep it shown with "glDepthFunc"
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN, 
+        defaultValue = Settings.canvas.DEFAULT_DEPTH_TEST_ENABLED ? "True" : "False")
+    @SimpleProperty(userVisible = false)
+    public void glDepthTestEnabled(boolean enabled) {
+        this.glDepthTestEnabled = enabled;
+    }
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_NON_NEGATIVE_INTEGER,
+        defaultValue = ""+Settings.canvas.DEFAULT_DEPTH_FUNC)
+    @SimpleProperty(userVisible = false)
+    public void glDepthFunc(int func){
+        // EN    https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDepthFunc.xhtml
+        // ZH_CN http://blog.csdn.net/shuaihj/article/details/7230780
+        this.glDepthFunc = func;
+    }
+
+
 
     @SimpleFunction(
         description = "Request that the renderer render a frame. This is usually called "+
@@ -274,8 +326,15 @@ implements Component {
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            gl.glShadeModel(GL10.GL_SMOOTH);
+            gl.glShadeModel(glShadeModel);
+            // Depth buffer setup.
             gl.glClearDepthf(1.0f);
+            if(glDepthTestEnabled){
+                gl.glEnable(GL10.GL_DEPTH_TEST);
+                gl.glDepthFunc(glDepthFunc);
+            }else{
+                gl.glDisable(GL10.GL_DEPTH_TEST);
+            }
             // zh - glHint - http://blog.csdn.net/shuaihj/article/details/7230867
             gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
 
@@ -307,7 +366,7 @@ implements Component {
             log.log("onDrawFrame {");
             log.pushOffset();
             gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-            gl.glClearColor(0, 0, 0, 0);
+            gl.glClearColor(bgColorF[0], bgColorF[1], bgColorF[2], bgColorF[3]);
 
             gl.glLoadIdentity();
             gl.glTranslatef(0, 0, -4);
