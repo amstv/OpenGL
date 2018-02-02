@@ -387,6 +387,31 @@ implements Component {
         }
         glRender.glPointSize(size);
     }
+
+    @SimpleFunction(description = "The area that shown as the canvas.\n"+
+            "In OpenGL, the left-bottom corner is the origin, (0,0). "+
+            "X increase rightward, y increase upward (Same as the first quadrant of the Cartesian coordinate system). "+
+            "So the area here is base on (x,y) and extend a width and a height.\n"+
+            "E.g. (x=10, y=10, width=20, height=20) == Rectangular((10,10), (30,30))")
+    public void glViewport(int x, int y, int width, int height) {
+        if (glRender == null) {
+            log.log("glViewport on a null GL10 object");
+            return;
+        }
+        // zh -glViewPort - http://www.guidebee.info/wordpress/archives/2036
+        glRender.glViewport(x, y, width, height);
+    }
+    @SimpleFunction(description = "Multiply the current matrix with an orthographic matrix.")
+    public void glOrtho(int left, int right, int bottom, int top, float near, float far) {
+        if (glRender==null) {
+            log.log("glOrtho on a null GL10 object");
+            return;
+        }
+        // en - glOrthof - https://www.khronos.org/registry/OpenGL-Refpages/es1.1/xhtml/glOrtho.xml
+        // zh - glOrthof - http://blog.csdn.net/shizhipeng/article/details/4939529
+        glRender.glOrthof(left, right, bottom, top, near, far);
+    }
+
     
 
 
