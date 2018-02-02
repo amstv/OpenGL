@@ -152,4 +152,36 @@ public final class GL10Constant extends AndroidNonvisibleComponent implements Co
     public int GL_TEXTURE_2D() {
         return GL10.GL_TEXTURE_2D;
     }
+
+    /**
+     * glDrawArrays mode
+     */
+    @SimpleProperty
+    public int GL_POINTS() {
+        return GL10.GL_POINTS;
+    }
+    @SimpleProperty
+    public int GL_LINES() {
+        return GL10.GL_LINES;
+    }
+    @SimpleProperty
+    public int GL_LINE_LOOP() {
+        return GL10.GL_LINE_LOOP;
+    }
+    @SimpleProperty
+    public int GL_LINE_STRIP() {
+        return GL10.GL_LINE_STRIP;
+    }
+    @SimpleProperty
+    public int GL_TRIANGLES() {
+        return GL10.GL_TRIANGLES;
+    }
+    @SimpleProperty
+    public int GL_TRIANGLE_STRIP() {
+        return GL10.GL_TRIANGLE_STRIP;
+    }
+    @SimpleProperty
+    public int GL_TRIANGLE_FAN() {
+        return GL10.GL_TRIANGLE_FAN;
+    }
 }

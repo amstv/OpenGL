@@ -5,7 +5,10 @@ import android.opengl.GLU;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import github.OpenSourceAIX.OpenGL10.util.BufferUtil;
 import github.OpenSourceAIX.OpenGL10.util.Util;
+
+import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -23,6 +26,8 @@ import com.google.appinventor.components.runtime.Component;
 import com.google.appinventor.components.runtime.ComponentContainer;
 import com.google.appinventor.components.runtime.EventDispatcher;
 import com.google.appinventor.components.runtime.HVArrangement;
+import com.google.appinventor.components.runtime.util.ErrorMessages;
+import com.google.appinventor.components.runtime.util.YailList;
 
 @DesignerComponent(version = Settings.EXTENSION_VERSION,
     description = Settings.EXTENSION_DESCRIPTION,
@@ -265,7 +270,7 @@ implements Component {
 
     @SimpleFunction(description = "Matrices operation: reset")
     public void glLoadIdentity() {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glLoadIdentity on a null GL10 object");
             return;
         }
@@ -273,7 +278,7 @@ implements Component {
     }
     @SimpleFunction(description = "Matrices operation: push the current matrix stack")
     public void glPushMatrix() {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glPushMatrix on a null GL10 object");
             return;
         }
@@ -281,7 +286,7 @@ implements Component {
     }
     @SimpleFunction(description = "Matrices operation: pop the current matrix stack")
     public void glPopMatrix() {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glPopMatrix on a null GL10 object");
             return;
         }
@@ -289,7 +294,7 @@ implements Component {
     }
     @SimpleFunction(description = "Matrices operation: translate (moving)")
     public void glTranslate(float x, float y, float z) {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glTranslate on a null GL10 object");
             return;
         }
@@ -297,7 +302,7 @@ implements Component {
     }
     @SimpleFunction(description = "Matrices operation: scale")
     public void glScale(float x, float y, float z) {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glScale on a null GL10 object");
             return;
         }
@@ -309,7 +314,7 @@ implements Component {
             "E.g. glRotate(angle=45, x=1, y=0 ,z=0) means that rotate anti-clockwise for 45 degree \n"+
             "THE ANGLE IS IN DRGREE, NOT IN RADIANS")
     public void glRotate(float angle, float x, float y, float z) {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glRotate on a null GL10 object");
             return;
         }
@@ -317,6 +322,71 @@ implements Component {
         // zh - glRotate - http://www.cnblogs.com/1024Planet/p/5647224.html
         glRender.glRotatef(angle, x, y, z);
     }
+
+    @SimpleFunction
+    public void glColor(int color) {
+        if (glRender == null) {
+            log.log("glColor on a null GL10 object");
+            return;
+        }
+        float[] f = new float[4];
+        Util.colorI2F(color, f);
+        glRender.glColor4f(f[0], f[1], f[2], f[3]);
+    }
+
+    @SimpleFunction
+    public void glVertexPointer(YailList pointList){
+        if (glRender == null) {
+            log.log("glVertexPointer on a null GL10 object");
+            return;
+        }
+        try {
+            FloatBuffer fb = BufferUtil.getBufferF(pointList);
+            glRender.glVertexPointer(3, GL10.GL_FLOAT, 0, fb);
+        } catch (IllegalArgumentException e) {
+            String msg = "the format of the point list is not excepted: " + e.toString();
+            log.log("ERROR: " + msg);
+            container.$form().dispatchErrorOccurredEvent(
+                this, 
+                "glVertexPointer", 
+                ErrorMessages.ERROR_EXTENSION_ERROR, 
+                0, "GLCanvas", msg);
+        }
+    }
+    @SimpleFunction(description = "This should run after glVertexPointer.\n"+
+            "Parameters:\n"+
+            "- mode: GL_POINTS, GL_LINES, GL_LINE_LOOP, GL_LINE_STRIP, GL_TRIANGLES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN.\n"+
+            "- start is the indedx of the first that want to draw in the point array (start from 0).\n"+
+            "- count is the point that want to draw.")
+    public void glDrawArrays(int mode, int start, int count) {
+        if (glRender == null) {
+            Log("glDrawArrays on a null GL10 object");
+            return;
+        }
+        glRender.glDrawArrays(mode, start, count);
+    }
+
+    @SimpleFunction(description = "This should run after glVertexPointer.\n"+
+            "Parameters:\n"+
+            "- start is the indedx of the first that want to draw in the point array (start from 0).\n"+
+            "- count is the point that want to draw.")
+    public void glDrawArraysPoints(int start, int count) {
+        if (glRender == null) {
+            Log("glDrawArraysPoints on a null GL10 object");
+            return;
+        }
+        this.glDrawArrays(GL10.GL_POINTS, start, count);
+    }
+
+    @SimpleFunction
+    public void glPointSize(float size) {
+        if (glRender == null) {
+            Log("glPointSize on a null GL10 object");
+            return;
+        }
+        glRender.glPointSize(size);
+    }
+    
 
 
     private class Renderer implements GLSurfaceView.Renderer {
