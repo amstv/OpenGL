@@ -157,10 +157,58 @@ implements Component {
      */
     @SimpleFunction
     public void gl() {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log(" on a null GL10 object");
             return;
         }
+    }
+    
+    @SimpleFunction(description = "Enable a client-side capability.\n"+
+        "Accepted Constant: GL_VERTEX_ARRAY, GL_NORMAL_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY")
+    public void glEnableClientState(int array) {
+        if (glRender == null) {
+            log.log("glEnableClientState on a null GL10 object");
+            return;
+        }
+        glRender.glEnableClientState(array);
+    }
+
+    @SimpleFunction(description = "Disable a client-side capability.\n"+
+        "Accepted client state: GL_VERTEX_ARRAY, GL_NORMAL_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY")
+    public void glDisableClientState(int array) {
+        if (glRender == null) {
+            log.log("glDisableClientState on a null GL10 object");
+            return;
+        }
+        glRender.glDisableClientState(array);
+    }
+
+    private static final String GL_CAPABILITY_LIST=
+        "Accepted capabilities: GL_ALPHA_TEST, GL_BLEND, GL_COLOR_LOGIC_OP, GL_COLOR_MATERIAL, GL_CULL_FACE, "+
+        "GL_DEPTH_TEST, GL_DITHER, GL_FOG, GL_LIGHTING, GL_LINE_SMOOTH, GL_MULTISAMPLE, GL_NORMALIZE, GL_POINT_SMOOTH, "+
+        "GL_POLYGON_OFFSET_FILL, GL_RESCALE_NORMAL, GL_SAMPLE_ALPHA_TO_COVERAGE, GL_SAMPLE_ALPHA_TO_ONE, "+
+        "GL_SAMPLE_COVERAGE, GL_SCISSOR_TEST, GL_STENCIL_TEST, GL_TEXTURE_2D";
+    
+    @SimpleFunction(description = "Disable server-side GL capabilities.\n"+GL_CAPABILITY_LIST)
+    public void glEnable(int capability) {
+        if (glRender == null) {
+            log.log("glEnable on a null GL10 object");
+            return;
+        }
+        // en - glEnable/glDisable - https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glEnable.xml
+        // zh - glEnable/glDisable - http://blog.csdn.net/wangyuchun_799/article/details/7821592
+        glRender.glEnable(capability);
+    }
+
+    @SimpleFunction(description = "disable server-side GL capabilities"+GL_CAPABILITY_LIST)
+    public void glDisable(int capability) {
+        if (glRender == null) {
+            log.log("glDisable on a null GL10 object");
+            return;
+        }
+        // en - glEnable/glDisable - https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glEnable.xml
+        // zh - glEnable/glDisable - http://blog.csdn.net/wangyuchun_799/article/details/7821592
+        glRender.glDisable(capability);
     }
 
     private class Renderer implements GLSurfaceView.Renderer {
