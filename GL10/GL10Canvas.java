@@ -5,10 +5,13 @@ import android.opengl.GLU;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import github.OpenSourceAIX.OpenGL.GL10.interfaces.Drawable;
 import github.OpenSourceAIX.OpenGL.GL10.util.BufferUtil;
 import github.OpenSourceAIX.OpenGL.GL10.util.Util;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -51,9 +54,9 @@ implements Component {
     /**
      * Properties related
      */
-    private boolean asContentView;
+    private boolean asContentView = Settings.canvas.DEFAULT_AS_CONTENT_VIEW;
     
-    private boolean glRenderContinuously;
+    private boolean glRenderContinuously = Settings.canvas.DEFAULT_RENDER_CONTINUOUSLY;
 
     private int bgColor = Settings.canvas.DEFAULT_BG_COLOR;
     private float[] bgColorF = new float[4];
@@ -62,6 +65,8 @@ implements Component {
     
     private boolean glDepthTestEnabled = Settings.canvas.DEFAULT_DEPTH_TEST_ENABLED;
     private int glDepthFunc = Settings.canvas.DEFAULT_DEPTH_FUNC;
+
+    private boolean autoRenderDrawables = Settings.canvas.DEFAULT_AUTO_RENDER;
     
     /**
      * Methods related
@@ -69,9 +74,10 @@ implements Component {
     private final github.OpenSourceAIX.OpenGL.GL10.Log log = 
         new github.OpenSourceAIX.OpenGL.GL10.Log();
     private GL10 glRender = null;
+    private List<Drawable> drawables = new ArrayList<Drawable>();
 
 
-
+    
     public GL10Canvas(ComponentContainer container) {
         super(container.$form());
         this.container = container;
@@ -208,8 +214,16 @@ implements Component {
         this.glDepthFunc = func;
     }
 
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_BOOLEAN,
+        defaultValue = Settings.canvas.DEFAULT_AUTO_RENDER ? "True" : "False")
+    @SimpleProperty
+    public void AutoRenderDrawables(boolean autoRender) {
+        this.autoRenderDrawables = autoRender;
+    }
 
 
+
+    
     @SimpleFunction(
         description = "Request that the renderer render a frame. This is usually called "+
             "only when RenderContinuously is not checked (false)")
@@ -433,6 +447,34 @@ implements Component {
         glRender.glOrthof(left, right, bottom, top, near, far);
     }
 
+    @SimpleFunction
+    public void RenderDrawables() {
+        if (glRender==null) {
+            log.log("RenderDrawable on a null GL10 object");
+            return;
+        }
+        for (Drawable d : drawables) {
+            if (d.getVisible()) {
+                d.draw(glRender);
+            }
+        }
+    }
+    public int addDrawable(Drawable d) {
+        int index = drawables.indexOf(d);
+        if (index != -1) {
+            return index;
+        } else {
+            drawables.add(d);
+            return drawables.size()-1;
+        }
+    }
+    public Drawable getDrawable(int index) {
+        try {
+            return drawables.get(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
     
 
 
@@ -489,6 +531,9 @@ implements Component {
             gl.glTranslatef(0, 0, -4);
 
             glRender = gl;
+            if (autoRenderDrawables) {
+                RenderDrawables();
+            }
             Render();
             glRender = null;
 

@@ -32,6 +32,8 @@ public class Settings {
         
         public static final boolean DEFAULT_RENDER_CONTINUOUSLY = true;
 
+        public static final boolean DEFAULT_AUTO_RENDER = true;
+
     }
 
 }
