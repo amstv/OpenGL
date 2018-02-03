@@ -438,7 +438,7 @@ implements Component {
     }
     @SimpleFunction(description = "Multiply the current matrix with an orthographic matrix.")
     public void glOrtho(int left, int right, int bottom, int top, float near, float far) {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("glOrtho on a null GL10 object");
             return;
         }
@@ -449,26 +449,32 @@ implements Component {
 
     @SimpleFunction
     public void RenderDrawables() {
-        if (glRender==null) {
+        if (glRender == null) {
             log.log("RenderDrawable on a null GL10 object");
             return;
         }
         for (Drawable d : drawables) {
-            if (d.getVisible()) {
-                d.draw(glRender);
-            }
+            d.draw(glRender);
         }
     }
     public int addDrawable(Drawable d) {
-        int index = drawables.indexOf(d);
+        return AddDrawable(d);
+    }
+    @SimpleFunction
+    public int AddDrawable(Drawable drawable) {
+        int index = drawables.indexOf(drawable);
         if (index != -1) {
             return index;
         } else {
-            drawables.add(d);
+            drawables.add(drawable);
             return drawables.size()-1;
         }
     }
     public Drawable getDrawable(int index) {
+        return GetDrawable(index);
+    }
+    @SimpleFunction
+    public Drawable GetDrawable(int index) {
         try {
             return drawables.get(index);
         } catch (IndexOutOfBoundsException e) {
