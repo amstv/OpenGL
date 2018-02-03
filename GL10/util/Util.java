@@ -1,5 +1,8 @@
 package github.OpenSourceAIX.OpenGL.GL10.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public final class Util {
 
     private Util() {
