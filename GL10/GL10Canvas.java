@@ -79,6 +79,27 @@ implements Component {
 
         BackgroundColor(Settings.canvas.DEFAULT_BG_COLOR);
     }
+
+    @SimpleFunction
+    public void Log(String message) {
+        log.log(message);
+    }
+    @SimpleFunction
+    public String LogGet() {
+        return log.get();
+    }
+    @SimpleFunction
+    public void LogPushOffset() {
+        log.pushOffset();
+    }
+    @SimpleFunction
+    public void LogPopOffset() {
+        log.popOffset();
+    }
+    @SimpleFunction
+    public void LogReset() {
+        log.reset();
+    }
     
 
     @SimpleFunction(
