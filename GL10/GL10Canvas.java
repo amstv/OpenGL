@@ -71,7 +71,7 @@ implements Component {
     /**
      * Methods related
      */
-    private final github.OpenSourceAIX.OpenGL.GL10.Log log = 
+    private static final github.OpenSourceAIX.OpenGL.GL10.Log log = 
         new github.OpenSourceAIX.OpenGL.GL10.Log();
     private GL10 glRender = null;
     private List<Drawable> drawables = new ArrayList<Drawable>();
@@ -87,23 +87,23 @@ implements Component {
     }
 
     @SimpleFunction
-    public void Log(String message) {
+    public static void Log(String message) {
         log.log(message);
     }
     @SimpleFunction
-    public String LogGet() {
+    public static String LogGet() {
         return log.get();
     }
     @SimpleFunction
-    public void LogPushOffset() {
+    public static void LogPushOffset() {
         log.pushOffset();
     }
     @SimpleFunction
-    public void LogPopOffset() {
+    public static void LogPopOffset() {
         log.popOffset();
     }
     @SimpleFunction
-    public void LogReset() {
+    public static void LogReset() {
         log.reset();
     }
     
